@@ -4,6 +4,9 @@ from project.setup.db import db
 
 
 class Base(db.Model):
+    """
+    Базовый класс для создания моделей
+    """
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
