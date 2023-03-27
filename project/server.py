@@ -8,7 +8,9 @@ from project.views import auth_ns, genres_ns, user_ns
 
 
 def base_service_error_handler(exception: BaseServiceError):
-    return jsonify({'error': str(exception)}), exception.code
+    return jsonify(
+        {'error': str(exception)}
+    ), exception.code
 
 
 def create_app(config_obj):
