@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Type
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class BaseConfig:
@@ -33,26 +33,28 @@ class TestingConfig(BaseConfig):
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + BASE_DIR.joinpath('project.db').as_posix()
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
+        os.path.dirname(BASE_DIR), "project.db")
 
 
-class ProductionConfig(BaseConfig):
-    DEBUG = False
-    # TODO: дополнить конфиг
+# class ProductionConfig(BaseConfig):
+#     DEBUG = False
+#     SQLALCHEMY_ECHO = True
+#     SQLALCHEMY_DATABASE_URI = "sqlite:///" + BASE_DIR.joinpath('project.db').as_posix()
 
 
-class ConfigFactory:
-    flask_env = os.getenv('FLASK_ENV')
+# class ConfigFactory:
+#     flask_env = os.getenv('FLASK_ENV')
+#
+#     @classmethod
+#     def get_config(cls) -> Type[BaseConfig]:
+#         if cls.flask_env == 'development':
+#             return DevelopmentConfig
+#         # elif cls.flask_env == 'production':
+#         #     return ProductionConfig
+#         elif cls.flask_env == 'testing':
+#             return TestingConfig
+#         raise NotImplementedError
 
-    @classmethod
-    def get_config(cls) -> Type[BaseConfig]:
-        if cls.flask_env == 'development':
-            return DevelopmentConfig
-        elif cls.flask_env == 'production':
-            return ProductionConfig
-        elif cls.flask_env == 'testing':
-            return TestingConfig
-        raise NotImplementedError
 
-
-config = ConfigFactory.get_config()
+# config = ConfigFactory.get_config()

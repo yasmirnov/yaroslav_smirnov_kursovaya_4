@@ -1,12 +1,12 @@
 import logging
 
-from project.config import config
-from project.models import Genre
-from project.server import create_app, db
+from project.config import DevelopmentConfig
+from project.server import create_app
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s')
 
-app = create_app(config)
+app = create_app(DevelopmentConfig)
 
-if __name__ == 'main':
-    app.run()
+
+if __name__ == '__main__':
+    app.run(port=25000)

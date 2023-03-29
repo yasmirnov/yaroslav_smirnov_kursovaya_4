@@ -47,8 +47,8 @@ class UsersDAO(BaseDAO[User]):
             user.name = user_data.get('name')
         if user_data.get('surname'):
             user.surname = user_data.get('surname')
-        # if user_data.get('favourite_genre'):
-        #     user.favourite_genre = user_data.get('favourite_genre')
+        if user_data.get('favourite_genre'):
+            user.favourite_genre = user_data.get('favourite_genre')
 
         try:
             self.session.add(user)
