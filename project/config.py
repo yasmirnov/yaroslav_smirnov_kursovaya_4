@@ -5,6 +5,9 @@ from typing import Type
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+SECRET = 's3cR$eT'
+ALGO = 'HS256'
+
 
 class BaseConfig:
     SECRET_KEY = os.getenv('SECRET_KEY', 'you-will-never-guess')

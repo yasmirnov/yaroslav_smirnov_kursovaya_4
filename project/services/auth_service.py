@@ -2,8 +2,9 @@ import calendar
 import datetime
 
 import jwt
-from flask import abort, current_app
+from flask import abort
 
+from project.config import ALGO, SECRET
 from project.services.users_service import UsersService
 from project.tools.security import compare_password
 
@@ -28,20 +29,20 @@ class AuthService:
 
         min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         data['exp'] = calendar.timegm(min30.timetuple())
-        access_token = jwt.encode(data, key=current_app.config['SECRET_KEY'],
-                                  algorithm=current_app.config['JWT_ALGORITHM'])
+        access_token = jwt.encode(data, SECRET,
+                                  algorithm=ALGO)
 
         days130 = datetime.datetime.utcnow() + datetime.timedelta(days=130)
         data['exp'] = calendar.timegm(days130.timetuple())
-        refresh_token = jwt.encode(data, key=current_app.config['SECRET_KEY'],
-                                   algorithm=current_app.config['JWT_ALGORITHM'])
+        refresh_token = jwt.encode(data, SECRET,
+                                   algorithm=ALGO)
 
         return {'access_token': access_token, 'refresh_token': refresh_token}
 
     def approve_refresh_token(self, refresh_token):
-        data = jwt.decode(jwt=refresh_token,
-                          key=current_app.config['SECRET_KEY'],
-                          algorithm=current_app.config['JWT_ALGORITHM'])
+        data = jwt.decode(refresh_token,
+                          SECRET,
+                          algorithms=[ALGO])
         if 'email' not in data:
             abort(400)
         email = data.get('email')

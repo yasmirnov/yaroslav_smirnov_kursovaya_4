@@ -6,7 +6,7 @@ from project.models import Genre
 class TestGenresView:
     @pytest.fixture
     def genre(self, db):
-        obj = Genre(name="genre")
+        obj = Genre(name="<Боевик>")
         db.session.add(obj)
         db.session.commit()
         return obj

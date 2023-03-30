@@ -3,10 +3,12 @@ import hashlib
 import hmac
 
 import jwt
-from flask import current_app
+from flask import current_app, request, abort
+
+from project.config import SECRET, ALGO
 
 
-def __generate_password_digest(password: str) -> bytes:
+def generate_password_digest(password: str):
     return hashlib.pbkdf2_hmac(
         hash_name="sha256",
         password=password.encode("utf-8"),
@@ -16,7 +18,7 @@ def __generate_password_digest(password: str) -> bytes:
 
 
 def generate_password_hash(password: str) -> str:
-    return base64.b64encode(__generate_password_digest(password)).decode('utf-8')
+    return base64.b64encode(generate_password_digest(password)).decode('utf-8')
 
 
 def compare_password(password_hash, other_password) -> bool:
@@ -31,6 +33,27 @@ def compare_password(password_hash, other_password) -> bool:
 
 def get_email_from_token(data):
     token = data['Authorization'].split('Bearer')[-1]
-    data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=current_app.config['JWT_ALGORITHM'])
+    data = jwt.decode(token, SECRET, algorithms=[ALGO])
     email = data['email']
     return email
+
+
+def admin_required(func):
+    def wrapper(*args, **kwargs):
+        if 'Authorization' not in request.headers:
+            abort(401)
+
+        data = request.headers['Authorization']
+        token = data.split("Bearer ")[-1]
+
+        try:
+            user = jwt.decode(token, SECRET, algorithms=[ALGO])
+            role = user.get("role")
+        except Exception as e:
+            print("JWT Decode Exception", e)
+            abort(401)
+
+        if role != "admin":
+            abort(403)
+        return func(*args, **kwargs)
+    return wrapper

@@ -39,5 +39,5 @@ class User(models.Base):
     name = Column(String(160))
     surname = Column(String(160))
 
-    favourite_genre = Column(Integer, ForeignKey(Genre.id))
-    genre = relationship('Genre')
+    # favourite_genre = Column(Integer, ForeignKey(Genre.id))
+    # genre = relationship('Genre')

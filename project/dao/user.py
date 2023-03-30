@@ -1,21 +1,21 @@
 from sqlalchemy.exc import IntegrityError
 
-from project.dao.base import BaseDAO
 from project.exceptions import UserAlreadyExists
 from project.models import User
 from project.tools.security import generate_password_hash
 
 
-class UsersDAO(BaseDAO[User]):
+class UsersDAO:
     __model__ = User
 
     def __init__(self, session):
         self.session = session
-    # def get_all(self):
-    #     return self.session.query(User).all()
 
-    # def get_one(self, uid):
-    #     return self.session.query(User).get(uid)
+    def get_all(self):
+        return self.session.query(User).all()
+
+    def get_one(self, uid):
+        return self.session.query(User).get(uid)
 
     def get_by_email(self, email):
         return self.session.query(User).filter(User.email == email).first()
@@ -47,8 +47,8 @@ class UsersDAO(BaseDAO[User]):
             user.name = user_data.get('name')
         if user_data.get('surname'):
             user.surname = user_data.get('surname')
-        if user_data.get('favourite_genre'):
-            user.favourite_genre = user_data.get('favourite_genre')
+        # if user_data.get('favourite_genre'):
+        #     user.favourite_genre = user_data.get('favourite_genre')
 
         try:
             self.session.add(user)

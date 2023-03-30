@@ -11,30 +11,30 @@ from project.views.main.movies import movie_ns
 
 def base_service_error_handler(exception: BaseServiceError):
     return jsonify(
-        {'error': str(exception)}
+        {'error': exception.message}
     ), exception.code
 
 
 def create_app(config_obj):
     app = Flask(__name__)
     app.config.from_object(config_obj)
-    register_extensions(app)
+
+    db.init_app(app)
 
     @app.route('/')
     def index():
         return render_template('index.html')
-    return app
+    # return app
 
-
-def register_extensions(app):
-    # cors.init_app(app)
-    db.init_app(app)
     api.init_app(app)
+
     # Регистрация эндпоинтов
     api.add_namespace(genre_ns)
     api.add_namespace(director_ns)
     api.add_namespace(user_ns)
     api.add_namespace(movie_ns)
     api.add_namespace(auth_ns)
+
+    app.register_error_handler(BaseServiceError, base_service_error_handler)
 
     return app

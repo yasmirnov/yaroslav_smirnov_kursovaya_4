@@ -1,5 +1,4 @@
 from project.dao.user import UsersDAO
-from project.models import Movie
 from project.tools.security import generate_password_hash
 
 
@@ -11,13 +10,13 @@ class UsersService:
         """
         Сервис получения одного пользователя
         """
-        return self.get_one(uid)
+        return self.dao.get_one(uid)
 
     def get_by_email(self, email):
         """
         Сервис получения пользовтеля по email
         """
-        return self.get_by_email(email)
+        return self.dao.get_by_email(email)
 
     def get_all(self):
         """
